@@ -1,6 +1,6 @@
 # Context
 * This project is a demonstration of spring boot observability using the grafana stack.
-* The code was written to go along with [this article]()
+* The code was written to go along with [this article](https://codemajor.de/2025/03/07/spring-boot-observability/)
 
 ## Steps to run and observe
 1. docker compose up (run this from the terminal in the root folder of this project)
