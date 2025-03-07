@@ -1,0 +1,11 @@
+server:
+  http_listen_port: 3200   # Listen for all incoming requests on port 3200.
+
+distributor:
+  receivers:
+    zipkin:             # Receive trace data in any supported Zipkin format.
+storage:
+  trace:
+    backend: local      # Use the local filesystem for block storage. Not recommended for production systems.
+    local:
+      path: /tmp/tempo/blocks  # Directory to store the TSDB blocks

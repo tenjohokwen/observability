@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <springProperty scope="context" name="appName" source="spring.application.name"/>
+
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <metricsEnabled>true</metricsEnabled>
+        <http>
+            <url>http://localhost:3100/loki/api/v1/push</url>
+        </http>
+        <format>
+            <label>
+                <pattern>application=${appName},host=${HOSTNAME},level=%level"</pattern>
+            </label>
+            <!--message class="com.github.loki4j.logback.JsonLayout">
+                my regex in the datasource of grafana does not work when app runs without space between key value pair.
+                Online testers show that myregex is correct, even the grafana regex tester. so using the pattern config with space
+                "traceId": "%X{traceId:-}" works but "traceId":"%X{traceId:-}" does NOT (notice space after ':')
+                <mdc>
+                    <noPrefix>true</noPrefix>
+                </mdc>
+                <timestamp>
+                    <fieldName>@timestamp</fieldName>
+                </timestamp>
+                <loggerName>
+                    <targetLength>20</targetLength>
+                </loggerName>
+            </message-->
+            <message>
+                <pattern>
+                    {
+                    "@timestamp":"%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}",
+                    "level":"%level",
+                    "class":"%logger{36}",
+                    "thread":"%thread",
+                    "message":"%message",
+                    "traceId": "%X{traceId:-}",
+                    "spanId":"%X{spanId:-}",
+                    "pid":"${PID:-}"
+                    }
+                </pattern>
+
+            </message>
+            <sortByTime>true</sortByTime>
+        </format>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="LOKI"/>
+    </root>
+</configuration>
